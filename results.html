@@ -221,12 +221,10 @@
         const bg = idx % 2 === 0 ? 'marble-warm' : 'marble-light';
         const badgeClass = isFirst ? 'bg-gold-300 text-navy-800' : 'bg-navy-500 text-gold-300';
         const cards = rows.map(row => {
-          const isMedical = row.university.includes('의대') || row.university.includes('치대') || row.university.includes('약대');
-          const countClass = isMedical ? 'text-gold-400' : 'text-navy-500';
           return `
             <div class="fade-in glass-card rounded-xl p-6 text-center">
-              <p class="text-lg sm:text-xl font-black ${countClass} mb-1.5 leading-snug">${row.university}</p>
-              <p class="text-sm font-bold text-navy-400">${row.headcount}<span class="ml-0.5">명</span></p>
+              <p class="text-base sm:text-lg font-black text-navy-500 mb-1.5 leading-snug">${row.university}</p>
+              <p class="text-lg sm:text-xl font-black text-gold-400">${row.headcount}<span class="text-sm font-bold ml-0.5">명</span></p>
             </div>
           `;
         }).join('');
