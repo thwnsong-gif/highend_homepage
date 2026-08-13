@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내신결과 | 하이엔드 수학학원</title>
+  <meta name="description" content="하이엔드 수학학원 내신결과. 학기별 내신 등급 향상 사례를 확인하세요.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 50:'#E8ECF4',100:'#C5CCE0',200:'#8B99C0',300:'#5166A1',400:'#2B3D6B',500:'#1E2A52',600:'#182243',700:'#121A34',800:'#0C1225',900:'#060A16' },
+            gold: { 50:'#FEF9E7',100:'#FCF0C3',200:'#F5DD8A',300:'#EBBA2D',400:'#D4A520',500:'#B8901C',600:'#9C7A18',700:'#806414',800:'#644E10',900:'#48380C' }
+          },
+          fontFamily: { sans: ['"Noto Sans KR"','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    html{scroll-behavior:smooth}
+    .hero-gradient{background:linear-gradient(135deg,#0C1225 0%,#1E2A52 40%,#2B3D6B 100%)}
+    .gold-glow{box-shadow:0 4px 24px rgba(235,186,45,.15),0 1px 4px rgba(235,186,45,.1)}
+    .fade-in{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+    .fade-in.visible{opacity:1;transform:translateY(0)}
+    .nav-link{position:relative}
+    .nav-link::after{content:'';position:absolute;bottom:-2px;left:50%;width:0;height:2px;background:#EBBA2D;transition:width .3s ease,left .3s ease}
+    .nav-link:hover::after{width:100%;left:0}
+    .marble-light{background-color:#faf9f7;background-image:linear-gradient(125deg,rgba(255,255,255,0.6) 0%,transparent 50%),linear-gradient(155deg,transparent 35%,rgba(200,195,188,0.08) 35.2%,rgba(200,195,188,0.08) 35.5%,transparent 35.7%),linear-gradient(45deg,transparent 60%,rgba(190,185,178,0.06) 60.1%,rgba(190,185,178,0.06) 60.4%,transparent 60.5%),linear-gradient(95deg,transparent 15%,rgba(210,205,198,0.05) 15.1%,rgba(210,205,198,0.05) 15.3%,transparent 15.4%),linear-gradient(170deg,transparent 72%,rgba(195,190,183,0.04) 72.1%,rgba(195,190,183,0.04) 72.3%,transparent 72.4%)}
+    .marble-warm{background-color:#f5f3f0;background-image:linear-gradient(145deg,rgba(255,255,255,0.5) 0%,transparent 60%),linear-gradient(135deg,transparent 30%,rgba(200,195,188,0.1) 30.2%,rgba(200,195,188,0.1) 30.5%,transparent 30.7%),linear-gradient(25deg,transparent 55%,rgba(190,185,178,0.08) 55.1%,rgba(190,185,178,0.08) 55.4%,transparent 55.5%),linear-gradient(175deg,transparent 18%,rgba(210,205,198,0.06) 18.1%,rgba(210,205,198,0.06) 18.3%,transparent 18.4%),linear-gradient(80deg,transparent 78%,rgba(185,180,173,0.05) 78.1%,rgba(185,180,173,0.05) 78.3%,transparent 78.4%),linear-gradient(110deg,transparent 45%,rgba(205,200,193,0.07) 45.1%,rgba(205,200,193,0.07) 45.3%,transparent 45.4%)}
+    .card-shadow{box-shadow:0 1px 3px rgba(30,42,82,0.06),0 8px 24px rgba(30,42,82,0.08)}
+  </style>
+</head>
+<body class="font-sans text-navy-800 antialiased" style="background-color:#f8f6f3">
+
+  <header id="header" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-navy-100 transition-shadow duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 lg:h-20">
+        <a href="index.html" class="flex-shrink-0"><img src="./highend_logo/하이엔드 로고-Photoroom.png" alt="하이엔드 수학학원" class="h-10 lg:h-12 w-auto"></a>
+        <nav class="hidden lg:flex items-center space-x-8">
+          <a href="about.html" class="nav-link text-sm font-medium text-navy-600 hover:text-navy-500 tracking-tight">학원소개</a>
+          <a href="teachers.html" class="nav-link text-sm font-medium text-navy-600 hover:text-navy-500 tracking-tight">강사소개</a>
+          <div class="relative group">
+            <a href="schedule.html" class="nav-link inline-flex items-center gap-1 text-sm font-medium text-navy-600 hover:text-navy-500 tracking-tight">
+              시간표
+              <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </a>
+            <div class="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 transition-all duration-200">
+              <div class="bg-white rounded-xl shadow-xl border border-navy-100 overflow-hidden min-w-[128px]">
+                <a href="schedule.html#중등부" class="block px-5 py-3 text-sm font-medium text-navy-600 hover:bg-navy-50 hover:text-navy-800 focus:outline-none focus:bg-navy-50">중등부</a>
+                <a href="schedule.html#고1" class="block px-5 py-3 text-sm font-medium text-navy-600 hover:bg-navy-50 hover:text-navy-800 focus:outline-none focus:bg-navy-50">고1</a>
+                <a href="schedule.html#고2" class="block px-5 py-3 text-sm font-medium text-navy-600 hover:bg-navy-50 hover:text-navy-800 focus:outline-none focus:bg-navy-50">고2</a>
+                <a href="schedule.html#고3" class="block px-5 py-3 text-sm font-medium text-navy-600 hover:bg-navy-50 hover:text-navy-800 focus:outline-none focus:bg-navy-50">고3</a>
+              </div>
+            </div>
+          </div>
+          <div class="relative group">
+            <a href="naesin.html" class="nav-link inline-flex items-center gap-1 text-sm font-medium text-gold-400 hover:text-gold-500 tracking-tight">
+              입시결과
+              <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </a>
+            <div class="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 transition-all duration-200">
+              <div class="bg-white rounded-xl shadow-xl border border-navy-100 overflow-hidden min-w-[128px]">
+                <a href="results.html" class="block px-5 py-3 text-sm font-medium text-navy-600 hover:bg-navy-50 hover:text-navy-800 focus:outline-none focus:bg-navy-50">대입결과</a>
+                <a href="naesin.html" class="block px-5 py-3 text-sm font-bold text-gold-500 bg-gold-50">내신결과</a>
+              </div>
+            </div>
+          </div>
+          <a href="notices.html" class="nav-link text-sm font-medium text-navy-600 hover:text-navy-500 tracking-tight">공지사항</a>
+          <a href="directions.html" class="nav-link text-sm font-medium text-navy-600 hover:text-navy-500 tracking-tight">오시는길</a>
+          <a href="tel:0507-1430-3309" class="inline-flex items-center px-5 py-2.5 bg-navy-500 text-white text-sm font-bold rounded-lg hover:bg-navy-400 focus:outline-none focus:ring-2 focus:ring-gold-300 focus:ring-offset-2 active:scale-[0.97] transition-transform duration-150">상담 문의</a>
+        </nav>
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg text-navy-500 hover:bg-navy-50 focus:outline-none focus:ring-2 focus:ring-navy-300 active:scale-95 transition-transform duration-150" aria-label="메뉴 열기"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-navy-100">
+      <div class="px-4 py-4 space-y-1">
+        <a href="about.html" class="block px-4 py-3 text-sm font-medium text-navy-600 rounded-lg hover:bg-navy-50">학원소개</a>
+        <a href="teachers.html" class="block px-4 py-3 text-sm font-medium text-navy-600 rounded-lg hover:bg-navy-50">강사소개</a>
+        <a href="schedule.html" class="block px-4 py-3 text-sm font-medium text-navy-600 rounded-lg hover:bg-navy-50">시간표</a>
+        <a href="results.html" class="block px-4 py-3 text-sm font-medium text-navy-600 rounded-lg hover:bg-navy-50">대입결과</a>
+        <a href="naesin.html" class="block px-4 py-3 text-sm font-bold text-gold-400 rounded-lg bg-gold-50">내신결과</a>
+        <a href="notices.html" class="block px-4 py-3 text-sm font-medium text-navy-600 rounded-lg hover:bg-navy-50">공지사항</a>
+        <a href="directions.html" class="block px-4 py-3 text-sm font-medium text-navy-600 rounded-lg hover:bg-navy-50">오시는길</a>
+        <a href="tel:0507-1430-3309" class="block px-4 py-3 text-sm font-bold text-white bg-navy-500 rounded-lg text-center hover:bg-navy-400">상담 문의</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-gradient pt-16 lg:pt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+        <div class="text-center">
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">내신결과</h1>
+          <p class="mt-4 text-lg text-navy-200">학기마다 증명하는 내신 등급 향상</p>
+        </div>
+      </div>
+    </section>
+
+    <div id="naesin-container" class="py-16 lg:py-20 marble-light">
+      <p class="text-sm text-navy-300 text-center">불러오는 중...</p>
+    </div>
+  </main>
+
+  <footer class="bg-navy-800 text-navy-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div class="sm:col-span-2 lg:col-span-1">
+          <img src="./highend_logo/하이엔드 로고-Photoroom.png" alt="하이엔드 수학학원" class="h-10 w-auto brightness-200 mb-4">
+          <p class="text-sm text-navy-300 leading-relaxed">최상위권을 만드는 수학의 기준.<br>용인 동백 하이엔드 수학학원.</p>
+        </div>
+        <div><h4 class="text-sm font-bold text-white mb-4 tracking-wide">바로가기</h4><ul class="space-y-2.5"><li><a href="about.html" class="text-sm text-navy-300 hover:text-gold-300 transition-colors duration-200">학원소개</a></li><li><a href="teachers.html" class="text-sm text-navy-300 hover:text-gold-300 transition-colors duration-200">강사소개</a></li><li><a href="results.html" class="text-sm text-navy-300 hover:text-gold-300 transition-colors duration-200">대입결과</a></li><li><a href="naesin.html" class="text-sm text-navy-300 hover:text-gold-300 transition-colors duration-200">내신결과</a></li></ul></div>
+        <div><h4 class="text-sm font-bold text-white mb-4 tracking-wide">안내</h4><ul class="space-y-2.5"><li><a href="schedule.html" class="text-sm text-navy-300 hover:text-gold-300 transition-colors duration-200">시간표</a></li><li><a href="notices.html" class="text-sm text-navy-300 hover:text-gold-300 transition-colors duration-200">공지사항</a></li><li><a href="directions.html" class="text-sm text-navy-300 hover:text-gold-300 transition-colors duration-200">오시는길</a></li><li><a href="dashboard-x7k2/login.html" class="text-sm text-navy-400 hover:text-gold-300 transition-colors duration-200">관리자모드</a></li></ul></div>
+        <div><h4 class="text-sm font-bold text-white mb-4 tracking-wide">연락처</h4><ul class="space-y-2.5"><li class="flex items-center text-sm text-navy-300"><svg class="w-4 h-4 mr-2 flex-shrink-0 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>0507-1430-3309</li><li class="flex items-start text-sm text-navy-300"><svg class="w-4 h-4 mr-2 mt-0.5 flex-shrink-0 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>경기 용인시 기흥구 동백중앙로 358-6 2층</li></ul></div>
+      </div>
+      <div class="mt-12 pt-8 border-t border-navy-700"><p class="text-sm text-navy-400 text-center">&copy; 2024 하이엔드 수학학원. All rights reserved.</p></div>
+    </div>
+  </footer>
+
+  <script>
+    const menuBtn=document.getElementById('mobile-menu-btn'),mobileMenu=document.getElementById('mobile-menu'),menuIcon=document.getElementById('menu-icon');let isMenuOpen=false;
+    menuBtn.addEventListener('click',()=>{isMenuOpen=!isMenuOpen;mobileMenu.classList.toggle('hidden');menuIcon.setAttribute('d',isMenuOpen?'M6 18L18 6M6 6l12 12':'M4 6h16M4 12h16M4 18h16')});
+    const header=document.getElementById('header');window.addEventListener('scroll',()=>{header.classList.toggle('shadow-md',window.scrollY>10)});
+    const observer=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:.1});
+    document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="./js/supabase-client.js"></script>
+  <script>
+    async function loadNaesin() {
+      const { data, error } = await sb.from('naesin_results').select('*')
+        .order('year', { ascending: false })
+        .order('semester', { ascending: false })
+        .order('display_order');
+      const container = document.getElementById('naesin-container');
+      if (error) { container.innerHTML = '<p class="text-sm text-red-400 text-center">내신결과를 불러오지 못했습니다.</p>'; return; }
+      if (!data.length) { container.innerHTML = '<p class="text-sm text-navy-300 text-center">등록된 내신결과가 없습니다.</p>'; return; }
+
+      const groupKey = row => `${row.year}-${row.semester}`;
+      const keys = [...new Set(data.map(groupKey))];
+
+      container.innerHTML = `<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">` + keys.map(key => {
+        const [year, semester] = key.split('-');
+        const rows = data.filter(r => groupKey(r) === key);
+        const cards = rows.map(row => `
+          <div class="fade-in flex items-center gap-3 bg-white rounded-xl px-5 py-3 card-shadow border border-navy-50">
+            <span class="px-3 py-1 rounded-full bg-gold-100 text-gold-600 text-sm font-bold flex-shrink-0">${row.grade}</span>
+            <span class="text-sm text-navy-600 font-medium">${row.school} ${row.student_name}</span>
+          </div>
+        `).join('');
+        return `
+          <div>
+            <div class="fade-in inline-flex items-center px-4 py-1.5 rounded-full bg-navy-500 text-gold-300 text-sm font-bold mb-6">${year}년 ${semester}학기</div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">${cards}</div>
+          </div>
+        `;
+      }).join('') + `</div>`;
+
+      document.querySelectorAll('#naesin-container .fade-in').forEach(el => observer.observe(el));
+    }
+
+    loadNaesin();
+  </script>
+</body>
+</html>

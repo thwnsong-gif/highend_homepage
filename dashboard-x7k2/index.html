@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 페이지 | 하이엔드 수학학원</title>
+  <meta name="robots" content="noindex, nofollow">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 50:'#E8ECF4',100:'#C5CCE0',200:'#8B99C0',300:'#5166A1',400:'#2B3D6B',500:'#1E2A52',600:'#182243',700:'#121A34',800:'#0C1225',900:'#060A16' },
+            gold: { 50:'#FEF9E7',100:'#FCF0C3',200:'#F5DD8A',300:'#EBBA2D',400:'#D4A520',500:'#B8901C',600:'#9C7A18',700:'#806414',800:'#644E10',900:'#48380C' }
+          },
+          fontFamily: { sans: ['"Noto Sans KR"','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #f5f3f0; }
+    .tab-btn { transition: color 0.2s ease, border-color 0.2s ease; }
+    .tab-btn.active { color: #1E2A52; border-color: #EBBA2D; }
+    .tab-btn:not(.active) { color: #8B99C0; border-color: transparent; }
+    .btn-primary { background:#1E2A52; }
+    .btn-primary:hover { background:#2B3D6B; transform: scale(1.02); }
+    .btn-primary:focus { outline:none; box-shadow: 0 0 0 2px #EBBA2D; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-danger { background:#fff; color:#dc2626; border:1px solid #fecaca; }
+    .btn-danger:hover { background:#fef2f2; transform: scale(1.02); }
+    .btn-danger:focus { outline:none; box-shadow: 0 0 0 2px #fecaca; }
+    .btn-danger:active { transform: scale(0.98); }
+    .btn-ghost { background:#fff; color:#1E2A52; border:1px solid #E8ECF4; }
+    .btn-ghost:hover { background:#E8ECF4; transform: scale(1.02); }
+    .btn-ghost:focus { outline:none; box-shadow: 0 0 0 2px #C5CCE0; }
+    .btn-ghost:active { transform: scale(0.98); }
+    input, textarea, select { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+    input:focus, textarea:focus, select:focus { outline:none; border-color:#1E2A52; box-shadow: 0 0 0 2px #C5CCE0; }
+  </style>
+</head>
+<body class="font-sans text-navy-800 antialiased">
+
+  <div id="app" class="hidden">
+    <header class="bg-navy-500 text-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-gold-300 tracking-widest uppercase">Admin</p>
+          <h1 class="text-lg font-black">하이엔드 수학학원 관리자</h1>
+        </div>
+        <button id="logout-btn" class="btn-ghost px-4 py-2 rounded-lg text-sm font-bold">로그아웃</button>
+      </div>
+    </header>
+
+    <nav class="bg-white border-b border-navy-100 sticky top-0 z-10">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 flex gap-6">
+        <button data-tab="schedule" class="tab-btn active px-1 py-4 text-sm font-bold border-b-2">시간표 관리</button>
+        <button data-tab="results" class="tab-btn px-1 py-4 text-sm font-bold border-b-2">대입결과 관리</button>
+        <button data-tab="naesin" class="tab-btn px-1 py-4 text-sm font-bold border-b-2">내신결과 관리</button>
+        <button data-tab="notices" class="tab-btn px-1 py-4 text-sm font-bold border-b-2">공지사항 관리</button>
+        <button data-tab="teachers" class="tab-btn px-1 py-4 text-sm font-bold border-b-2">강사 관리</button>
+      </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+
+      <!-- ============ 시간표 관리 ============ -->
+      <section id="panel-schedule" class="tab-panel">
+        <div class="bg-white rounded-2xl border border-navy-50 p-6 mb-8">
+          <h2 id="class-form-title" class="text-base font-bold text-navy-500 mb-4">새 반 추가</h2>
+          <form id="class-form" class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">구분</label>
+              <select id="class-division" class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm">
+                <option value="고등부">고등부</option>
+                <option value="중등부">중등부</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">학년</label>
+              <select id="class-grade" class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm"></select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">반 이름</label>
+              <input id="class-code" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: S1, A1, 대수 선행반">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">시간</label>
+              <input id="class-time" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: 월금 6:00~10:00">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">담당강사</label>
+              <input id="class-teacher" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: 허준우T">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">정렬 순서 (작을수록 위)</label>
+              <input id="class-order" type="number" value="0" class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-navy-400 mb-1">반 소개</label>
+              <textarea id="class-desc" rows="2" class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm"></textarea>
+            </div>
+            <div class="sm:col-span-2 flex gap-2">
+              <button type="submit" class="btn-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold">저장</button>
+              <button type="button" id="class-cancel-btn" class="btn-ghost hidden px-5 py-2.5 rounded-lg text-sm font-bold">취소</button>
+            </div>
+          </form>
+        </div>
+        <div id="class-list" class="space-y-3"></div>
+      </section>
+
+      <!-- ============ 대입결과 관리 ============ -->
+      <section id="panel-results" class="tab-panel hidden">
+        <div class="bg-white rounded-2xl border border-navy-50 p-6 mb-8">
+          <h2 class="text-base font-bold text-navy-500 mb-4">상단 통계</h2>
+          <div id="stats-list" class="space-y-3"></div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-navy-50 p-6 mb-8">
+          <h2 id="admission-form-title" class="text-base font-bold text-navy-500 mb-4">대학 합격 실적 추가</h2>
+          <form id="admission-form" class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">연도</label>
+              <input id="admission-year" type="number" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: 2025">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">대학명</label>
+              <input id="admission-university" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: 서울대학교">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">합격 인원</label>
+              <input id="admission-headcount" type="number" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">정렬 순서</label>
+              <input id="admission-order" type="number" value="0" class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm">
+            </div>
+            <div class="sm:col-span-2 flex gap-2">
+              <button type="submit" class="btn-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold">저장</button>
+              <button type="button" id="admission-cancel-btn" class="btn-ghost hidden px-5 py-2.5 rounded-lg text-sm font-bold">취소</button>
+            </div>
+          </form>
+        </div>
+        <div id="admission-list" class="space-y-3"></div>
+      </section>
+
+      <!-- ============ 내신결과 관리 ============ -->
+      <section id="panel-naesin" class="tab-panel hidden">
+        <div class="bg-white rounded-2xl border border-navy-50 p-6 mb-8">
+          <h2 id="naesin-form-title" class="text-base font-bold text-navy-500 mb-4">내신결과 추가</h2>
+          <form id="naesin-form" class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">연도</label>
+              <input id="naesin-year" type="number" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: 2025">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">학기</label>
+              <select id="naesin-semester" class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm">
+                <option value="1">1학기</option>
+                <option value="2">2학기</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">등급</label>
+              <input id="naesin-grade" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: 1등급">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">학교</label>
+              <input id="naesin-school" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: 용인 OO고">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">학생 이름</label>
+              <input id="naesin-student" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: 송태환">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">정렬 순서</label>
+              <input id="naesin-order" type="number" value="0" class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm">
+            </div>
+            <div class="sm:col-span-2 flex gap-2">
+              <button type="submit" class="btn-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold">저장</button>
+              <button type="button" id="naesin-cancel-btn" class="btn-ghost hidden px-5 py-2.5 rounded-lg text-sm font-bold">취소</button>
+            </div>
+          </form>
+        </div>
+        <div id="naesin-list" class="space-y-3"></div>
+      </section>
+
+      <!-- ============ 공지사항 관리 ============ -->
+      <section id="panel-notices" class="tab-panel hidden">
+        <div class="bg-white rounded-2xl border border-navy-50 p-6 mb-8">
+          <h2 id="notice-form-title" class="text-base font-bold text-navy-500 mb-4">공지사항 작성</h2>
+          <form id="notice-form" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">제목</label>
+              <input id="notice-title" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">내용</label>
+              <textarea id="notice-content" rows="5" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm"></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">이미지 (선택)</label>
+              <div id="notice-image-preview" class="hidden mb-2">
+                <img id="notice-image-preview-img" class="h-32 rounded-lg border border-navy-100 object-cover" src="">
+                <label class="flex items-center gap-2 text-xs text-navy-500 mt-1">
+                  <input id="notice-image-remove" type="checkbox" class="rounded border-navy-200">
+                  이미지 제거
+                </label>
+              </div>
+              <input id="notice-image" type="file" accept="image/*" class="w-full text-sm">
+            </div>
+            <label class="flex items-center gap-2 text-sm text-navy-600">
+              <input id="notice-pinned" type="checkbox" class="rounded border-navy-200">
+              상단 고정
+            </label>
+            <div class="flex gap-2">
+              <button type="submit" class="btn-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold">저장</button>
+              <button type="button" id="notice-cancel-btn" class="btn-ghost hidden px-5 py-2.5 rounded-lg text-sm font-bold">취소</button>
+            </div>
+          </form>
+        </div>
+        <div id="notice-list" class="space-y-3"></div>
+      </section>
+
+      <!-- ============ 강사 관리 ============ -->
+      <section id="panel-teachers" class="tab-panel hidden">
+        <div class="bg-white rounded-2xl border border-navy-50 p-6 mb-8">
+          <h2 id="teacher-form-title" class="text-base font-bold text-navy-500 mb-4">새 강사 추가</h2>
+          <form id="teacher-form" class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">이름</label>
+              <input id="teacher-name" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: 이동하">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">직책</label>
+              <input id="teacher-role" required class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: 원장, 대표 강사">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-navy-400 mb-1">경력 (한 줄에 하나씩, 마지막 줄이 현재 소속으로 굵게 표시됩니다)</label>
+              <textarea id="teacher-career" rows="4" class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="前) 메가스터디 재수종합반 강사&#10;現) 하이엔드 대표"></textarea>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-navy-400 mb-1">소개 문구</label>
+              <input id="teacher-quote" class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm" placeholder="예: &quot;같은 노력도 이동하가 만들면 다릅니다.&quot;">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-navy-400 mb-1">정렬 순서 (작을수록 위)</label>
+              <input id="teacher-order" type="number" value="0" class="w-full px-3 py-2 border border-navy-100 rounded-lg text-sm">
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold text-navy-400 mb-1">프로필 사진</label>
+              <div id="teacher-photo-preview" class="hidden mb-2">
+                <img id="teacher-photo-preview-img" class="h-32 rounded-lg border border-navy-100 object-cover" src="">
+              </div>
+              <input id="teacher-photo" type="file" accept="image/*" class="w-full text-sm">
+            </div>
+            <div class="sm:col-span-2 flex gap-2">
+              <button type="submit" class="btn-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold">저장</button>
+              <button type="button" id="teacher-cancel-btn" class="btn-ghost hidden px-5 py-2.5 rounded-lg text-sm font-bold">취소</button>
+            </div>
+          </form>
+        </div>
+        <div id="teacher-list" class="space-y-3"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="loading" class="min-h-screen flex items-center justify-center text-navy-400 text-sm">확인 중...</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script>
+    const GRADES = { '고등부': ['고1','고2','고3'], '중등부': ['중1','중2','중3'] };
+
+    // ---------- 인증 가드 ----------
+    (async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) { window.location.href = './login.html'; return; }
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      init();
+    })();
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await sb.auth.signOut();
+      window.location.href = './login.html';
+    });
+
+    // ---------- 탭 전환 ----------
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.getAttribute('data-tab');
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+        document.getElementById('panel-' + tab).classList.remove('hidden');
+      });
+    });
+
+    function init() {
+      initClassForm();
+      loadClasses();
+      loadStats();
+      loadAdmissions();
+      loadNaesin();
+      loadNotices();
+      loadTeachers();
+    }
+
+    // ================= 시간표 =================
+    let editingClassId = null;
+
+    function initClassForm() {
+      const divisionEl = document.getElementById('class-division');
+      const gradeEl = document.getElementById('class-grade');
+      function refreshGrades() {
+        gradeEl.innerHTML = GRADES[divisionEl.value].map(g => `<option value="${g}">${g}</option>`).join('');
+      }
+      divisionEl.addEventListener('change', refreshGrades);
+      refreshGrades();
+    }
+
+    async function loadClasses() {
+      const { data, error } = await sb.from('classes').select('*').order('division').order('grade').order('display_order');
+      const list = document.getElementById('class-list');
+      if (error) { list.innerHTML = '<p class="text-sm text-red-500">불러오기 실패</p>'; return; }
+      if (!data.length) { list.innerHTML = '<p class="text-sm text-navy-300">등록된 반이 없습니다.</p>'; return; }
+      list.innerHTML = data.map(row => `
+        <div class="bg-white rounded-xl border border-navy-50 p-4 flex items-center justify-between gap-4">
+          <div class="min-w-0">
+            <p class="text-xs font-bold text-gold-500">${row.division} · ${row.grade}</p>
+            <p class="text-sm font-bold text-navy-600 truncate">${row.class_code} <span class="font-normal text-navy-400">· ${row.schedule_time} · ${row.teacher}</span></p>
+          </div>
+          <div class="flex gap-2 flex-shrink-0">
+            <button class="btn-ghost px-3 py-1.5 rounded-lg text-xs font-bold" onclick="editClass('${row.id}')">수정</button>
+            <button class="btn-danger px-3 py-1.5 rounded-lg text-xs font-bold" onclick="deleteClass('${row.id}')">삭제</button>
+          </div>
+        </div>
+      `).join('');
+      window.__classes = data;
+    }
+
+    window.editClass = function (id) {
+      const row = window.__classes.find(r => r.id === id);
+      if (!row) return;
+      editingClassId = id;
+      document.getElementById('class-division').value = row.division;
+      document.getElementById('class-division').dispatchEvent(new Event('change'));
+      document.getElementById('class-grade').value = row.grade;
+      document.getElementById('class-code').value = row.class_code;
+      document.getElementById('class-time').value = row.schedule_time;
+      document.getElementById('class-teacher').value = row.teacher;
+      document.getElementById('class-order').value = row.display_order;
+      document.getElementById('class-desc').value = row.description || '';
+      document.getElementById('class-form-title').textContent = '반 정보 수정';
+      document.getElementById('class-cancel-btn').classList.remove('hidden');
+      document.getElementById('class-form').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.deleteClass = async function (id) {
+      if (!confirm('이 반을 삭제하시겠습니까?')) return;
+      const { error } = await sb.from('classes').delete().eq('id', id);
+      if (error) { alert('삭제 실패: ' + error.message); return; }
+      loadClasses();
+    };
+
+    document.getElementById('class-cancel-btn').addEventListener('click', () => resetClassForm());
+
+    function resetClassForm() {
+      editingClassId = null;
+      document.getElementById('class-form').reset();
+      document.getElementById('class-division').dispatchEvent(new Event('change'));
+      document.getElementById('class-form-title').textContent = '새 반 추가';
+      document.getElementById('class-cancel-btn').classList.add('hidden');
+    }
+
+    document.getElementById('class-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        division: document.getElementById('class-division').value,
+        grade: document.getElementById('class-grade').value,
+        class_code: document.getElementById('class-code').value,
+        schedule_time: document.getElementById('class-time').value,
+        teacher: document.getElementById('class-teacher').value,
+        display_order: Number(document.getElementById('class-order').value) || 0,
+        description: document.getElementById('class-desc').value,
+      };
+      const { error } = editingClassId
+        ? await sb.from('classes').update(payload).eq('id', editingClassId)
+        : await sb.from('classes').insert(payload);
+      if (error) { alert('저장 실패: ' + error.message); return; }
+      resetClassForm();
+      loadClasses();
+    });
+
+    // ================= 입시결과 - 통계 =================
+    async function loadStats() {
+      const { data, error } = await sb.from('result_stats').select('*').order('display_order');
+      const list = document.getElementById('stats-list');
+      if (error || !data) { list.innerHTML = '<p class="text-sm text-red-500">불러오기 실패</p>'; return; }
+      list.innerHTML = data.map(row => `
+        <div class="flex items-center gap-3">
+          <input data-stat-label="${row.id}" value="${row.label}" class="flex-1 px-3 py-2 border border-navy-100 rounded-lg text-sm">
+          <input data-stat-value="${row.id}" value="${row.value}" class="w-28 px-3 py-2 border border-navy-100 rounded-lg text-sm">
+          <button class="btn-primary text-white px-4 py-2 rounded-lg text-xs font-bold" onclick="saveStat('${row.id}')">저장</button>
+        </div>
+      `).join('');
+    }
+
+    window.saveStat = async function (id) {
+      const label = document.querySelector(`[data-stat-label="${id}"]`).value;
+      const value = document.querySelector(`[data-stat-value="${id}"]`).value;
+      const { error } = await sb.from('result_stats').update({ label, value }).eq('id', id);
+      if (error) { alert('저장 실패: ' + error.message); return; }
+      alert('저장되었습니다.');
+    };
+
+    // ================= 입시결과 - 대학 합격 실적 =================
+    let editingAdmissionId = null;
+
+    async function loadAdmissions() {
+      const { data, error } = await sb.from('admissions').select('*').order('year', { ascending: false }).order('display_order');
+      const list = document.getElementById('admission-list');
+      if (error) { list.innerHTML = '<p class="text-sm text-red-500">불러오기 실패</p>'; return; }
+      if (!data.length) { list.innerHTML = '<p class="text-sm text-navy-300">등록된 데이터가 없습니다.</p>'; return; }
+      list.innerHTML = data.map(row => `
+        <div class="bg-white rounded-xl border border-navy-50 p-4 flex items-center justify-between gap-4">
+          <p class="text-sm font-bold text-navy-600">${row.year} · ${row.university} <span class="font-normal text-navy-400">· ${row.headcount}명</span></p>
+          <div class="flex gap-2 flex-shrink-0">
+            <button class="btn-ghost px-3 py-1.5 rounded-lg text-xs font-bold" onclick="editAdmission('${row.id}')">수정</button>
+            <button class="btn-danger px-3 py-1.5 rounded-lg text-xs font-bold" onclick="deleteAdmission('${row.id}')">삭제</button>
+          </div>
+        </div>
+      `).join('');
+      window.__admissions = data;
+    }
+
+    window.editAdmission = function (id) {
+      const row = window.__admissions.find(r => r.id === id);
+      if (!row) return;
+      editingAdmissionId = id;
+      document.getElementById('admission-year').value = row.year;
+      document.getElementById('admission-university').value = row.university;
+      document.getElementById('admission-headcount').value = row.headcount;
+      document.getElementById('admission-order').value = row.display_order;
+      document.getElementById('admission-form-title').textContent = '실적 수정';
+      document.getElementById('admission-cancel-btn').classList.remove('hidden');
+      document.getElementById('admission-form').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.deleteAdmission = async function (id) {
+      if (!confirm('이 실적을 삭제하시겠습니까?')) return;
+      const { error } = await sb.from('admissions').delete().eq('id', id);
+      if (error) { alert('삭제 실패: ' + error.message); return; }
+      loadAdmissions();
+    };
+
+    document.getElementById('admission-cancel-btn').addEventListener('click', () => resetAdmissionForm());
+
+    function resetAdmissionForm() {
+      editingAdmissionId = null;
+      document.getElementById('admission-form').reset();
+      document.getElementById('admission-form-title').textContent = '대학 합격 실적 추가';
+      document.getElementById('admission-cancel-btn').classList.add('hidden');
+    }
+
+    document.getElementById('admission-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        year: Number(document.getElementById('admission-year').value),
+        university: document.getElementById('admission-university').value,
+        headcount: Number(document.getElementById('admission-headcount').value),
+        display_order: Number(document.getElementById('admission-order').value) || 0,
+      };
+      const { error } = editingAdmissionId
+        ? await sb.from('admissions').update(payload).eq('id', editingAdmissionId)
+        : await sb.from('admissions').insert(payload);
+      if (error) { alert('저장 실패: ' + error.message); return; }
+      resetAdmissionForm();
+      loadAdmissions();
+    });
+
+    // ================= 내신결과 =================
+    let editingNaesinId = null;
+
+    async function loadNaesin() {
+      const { data, error } = await sb.from('naesin_results').select('*')
+        .order('year', { ascending: false }).order('semester', { ascending: false }).order('display_order');
+      const list = document.getElementById('naesin-list');
+      if (error) { list.innerHTML = '<p class="text-sm text-red-500">불러오기 실패</p>'; return; }
+      if (!data.length) { list.innerHTML = '<p class="text-sm text-navy-300">등록된 데이터가 없습니다.</p>'; return; }
+      list.innerHTML = data.map(row => `
+        <div class="bg-white rounded-xl border border-navy-50 p-4 flex items-center justify-between gap-4">
+          <p class="text-sm font-bold text-navy-600">${row.year}년 ${row.semester}학기 · ${row.grade} <span class="font-normal text-navy-400">· ${row.school} ${row.student_name}</span></p>
+          <div class="flex gap-2 flex-shrink-0">
+            <button class="btn-ghost px-3 py-1.5 rounded-lg text-xs font-bold" onclick="editNaesin('${row.id}')">수정</button>
+            <button class="btn-danger px-3 py-1.5 rounded-lg text-xs font-bold" onclick="deleteNaesin('${row.id}')">삭제</button>
+          </div>
+        </div>
+      `).join('');
+      window.__naesin = data;
+    }
+
+    window.editNaesin = function (id) {
+      const row = window.__naesin.find(r => r.id === id);
+      if (!row) return;
+      editingNaesinId = id;
+      document.getElementById('naesin-year').value = row.year;
+      document.getElementById('naesin-semester').value = String(row.semester);
+      document.getElementById('naesin-grade').value = row.grade;
+      document.getElementById('naesin-school').value = row.school;
+      document.getElementById('naesin-student').value = row.student_name;
+      document.getElementById('naesin-order').value = row.display_order;
+      document.getElementById('naesin-form-title').textContent = '내신결과 수정';
+      document.getElementById('naesin-cancel-btn').classList.remove('hidden');
+      document.getElementById('naesin-form').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.deleteNaesin = async function (id) {
+      if (!confirm('이 내신결과를 삭제하시겠습니까?')) return;
+      const { error } = await sb.from('naesin_results').delete().eq('id', id);
+      if (error) { alert('삭제 실패: ' + error.message); return; }
+      loadNaesin();
+    };
+
+    document.getElementById('naesin-cancel-btn').addEventListener('click', () => resetNaesinForm());
+
+    function resetNaesinForm() {
+      editingNaesinId = null;
+      document.getElementById('naesin-form').reset();
+      document.getElementById('naesin-form-title').textContent = '내신결과 추가';
+      document.getElementById('naesin-cancel-btn').classList.add('hidden');
+    }
+
+    document.getElementById('naesin-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        year: Number(document.getElementById('naesin-year').value),
+        semester: Number(document.getElementById('naesin-semester').value),
+        grade: document.getElementById('naesin-grade').value,
+        school: document.getElementById('naesin-school').value,
+        student_name: document.getElementById('naesin-student').value,
+        display_order: Number(document.getElementById('naesin-order').value) || 0,
+      };
+      const { error } = editingNaesinId
+        ? await sb.from('naesin_results').update(payload).eq('id', editingNaesinId)
+        : await sb.from('naesin_results').insert(payload);
+      if (error) { alert('저장 실패: ' + error.message); return; }
+      resetNaesinForm();
+      loadNaesin();
+    });
+
+    // ================= 공지사항 =================
+    let editingNoticeId = null;
+    let editingNoticeImageUrl = null;
+
+    async function loadNotices() {
+      const { data, error } = await sb.from('notices').select('*').order('is_pinned', { ascending: false }).order('created_at', { ascending: false });
+      const list = document.getElementById('notice-list');
+      if (error) { list.innerHTML = '<p class="text-sm text-red-500">불러오기 실패</p>'; return; }
+      if (!data.length) { list.innerHTML = '<p class="text-sm text-navy-300">등록된 공지사항이 없습니다.</p>'; return; }
+      list.innerHTML = data.map(row => `
+        <div class="bg-white rounded-xl border border-navy-50 p-4 flex items-center justify-between gap-4">
+          <div class="min-w-0">
+            ${row.is_pinned ? '<span class="inline-block text-xs font-bold text-gold-500 mr-1">[고정]</span>' : ''}
+            ${row.image_url ? '<span class="inline-block text-xs font-bold text-navy-300 mr-1">[이미지]</span>' : ''}
+            <span class="text-sm font-bold text-navy-600">${row.title}</span>
+            <p class="text-xs text-navy-300">${new Date(row.created_at).toLocaleDateString('ko-KR')}</p>
+          </div>
+          <div class="flex gap-2 flex-shrink-0">
+            <button class="btn-ghost px-3 py-1.5 rounded-lg text-xs font-bold" onclick="editNotice('${row.id}')">수정</button>
+            <button class="btn-danger px-3 py-1.5 rounded-lg text-xs font-bold" onclick="deleteNotice('${row.id}')">삭제</button>
+          </div>
+        </div>
+      `).join('');
+      window.__notices = data;
+    }
+
+    window.editNotice = function (id) {
+      const row = window.__notices.find(r => r.id === id);
+      if (!row) return;
+      editingNoticeId = id;
+      editingNoticeImageUrl = row.image_url || null;
+      document.getElementById('notice-title').value = row.title;
+      document.getElementById('notice-content').value = row.content;
+      document.getElementById('notice-pinned').checked = row.is_pinned;
+      document.getElementById('notice-image').value = '';
+      document.getElementById('notice-image-remove').checked = false;
+      const preview = document.getElementById('notice-image-preview');
+      if (editingNoticeImageUrl) {
+        document.getElementById('notice-image-preview-img').src = editingNoticeImageUrl;
+        preview.classList.remove('hidden');
+      } else {
+        preview.classList.add('hidden');
+      }
+      document.getElementById('notice-form-title').textContent = '공지사항 수정';
+      document.getElementById('notice-cancel-btn').classList.remove('hidden');
+      document.getElementById('notice-form').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.deleteNotice = async function (id) {
+      if (!confirm('이 공지사항을 삭제하시겠습니까?')) return;
+      const { error } = await sb.from('notices').delete().eq('id', id);
+      if (error) { alert('삭제 실패: ' + error.message); return; }
+      loadNotices();
+    };
+
+    document.getElementById('notice-cancel-btn').addEventListener('click', () => resetNoticeForm());
+
+    function resetNoticeForm() {
+      editingNoticeId = null;
+      editingNoticeImageUrl = null;
+      document.getElementById('notice-form').reset();
+      document.getElementById('notice-image-preview').classList.add('hidden');
+      document.getElementById('notice-form-title').textContent = '공지사항 작성';
+      document.getElementById('notice-cancel-btn').classList.add('hidden');
+    }
+
+    function safeFileName(name) {
+      const dot = name.lastIndexOf('.');
+      const ext = dot >= 0 ? name.slice(dot) : '';
+      return `${Date.now()}${ext.replace(/[^a-zA-Z0-9.]/g, '')}`;
+    }
+
+    async function uploadNoticeImage(file) {
+      const path = safeFileName(file.name);
+      const { error: uploadError } = await sb.storage.from('notice-images').upload(path, file);
+      if (uploadError) throw uploadError;
+      const { data } = sb.storage.from('notice-images').getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    document.getElementById('notice-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const file = document.getElementById('notice-image').files[0];
+      const removeImage = document.getElementById('notice-image-remove').checked;
+
+      let image_url = removeImage ? null : editingNoticeImageUrl;
+      if (file) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '이미지 업로드 중...';
+        try {
+          image_url = await uploadNoticeImage(file);
+        } catch (err) {
+          alert('이미지 업로드 실패: ' + err.message);
+          submitBtn.disabled = false;
+          submitBtn.textContent = '저장';
+          return;
+        }
+        submitBtn.disabled = false;
+        submitBtn.textContent = '저장';
+      }
+
+      const payload = {
+        title: document.getElementById('notice-title').value,
+        content: document.getElementById('notice-content').value,
+        is_pinned: document.getElementById('notice-pinned').checked,
+        image_url,
+      };
+      const { error } = editingNoticeId
+        ? await sb.from('notices').update(payload).eq('id', editingNoticeId)
+        : await sb.from('notices').insert(payload);
+      if (error) { alert('저장 실패: ' + error.message); return; }
+      resetNoticeForm();
+      loadNotices();
+    });
+
+    // ================= 강사 =================
+    let editingTeacherId = null;
+    let editingTeacherPhotoUrl = null;
+
+    async function loadTeachers() {
+      const { data, error } = await sb.from('teachers').select('*').order('display_order');
+      const list = document.getElementById('teacher-list');
+      if (error) { list.innerHTML = '<p class="text-sm text-red-500">불러오기 실패</p>'; return; }
+      if (!data.length) { list.innerHTML = '<p class="text-sm text-navy-300">등록된 강사가 없습니다.</p>'; return; }
+      list.innerHTML = data.map(row => `
+        <div class="bg-white rounded-xl border border-navy-50 p-4 flex items-center justify-between gap-4">
+          <div class="min-w-0 flex items-center gap-3">
+            ${row.photo_url ? `<img src="${row.photo_url}" class="w-10 h-10 rounded-full object-cover flex-shrink-0">` : ''}
+            <p class="text-sm font-bold text-navy-600">${row.name} <span class="font-normal text-navy-400">· ${row.role}</span></p>
+          </div>
+          <div class="flex gap-2 flex-shrink-0">
+            <button class="btn-ghost px-3 py-1.5 rounded-lg text-xs font-bold" onclick="editTeacher('${row.id}')">수정</button>
+            <button class="btn-danger px-3 py-1.5 rounded-lg text-xs font-bold" onclick="deleteTeacher('${row.id}')">삭제</button>
+          </div>
+        </div>
+      `).join('');
+      window.__teachers = data;
+    }
+
+    window.editTeacher = function (id) {
+      const row = window.__teachers.find(r => r.id === id);
+      if (!row) return;
+      editingTeacherId = id;
+      editingTeacherPhotoUrl = row.photo_url || null;
+      document.getElementById('teacher-name').value = row.name;
+      document.getElementById('teacher-role').value = row.role;
+      document.getElementById('teacher-career').value = row.career || '';
+      document.getElementById('teacher-quote').value = row.quote || '';
+      document.getElementById('teacher-order').value = row.display_order;
+      document.getElementById('teacher-photo').value = '';
+      const preview = document.getElementById('teacher-photo-preview');
+      if (editingTeacherPhotoUrl) {
+        document.getElementById('teacher-photo-preview-img').src = editingTeacherPhotoUrl;
+        preview.classList.remove('hidden');
+      } else {
+        preview.classList.add('hidden');
+      }
+      document.getElementById('teacher-form-title').textContent = '강사 정보 수정';
+      document.getElementById('teacher-cancel-btn').classList.remove('hidden');
+      document.getElementById('teacher-form').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.deleteTeacher = async function (id) {
+      if (!confirm('이 강사를 삭제하시겠습니까?')) return;
+      const { error } = await sb.from('teachers').delete().eq('id', id);
+      if (error) { alert('삭제 실패: ' + error.message); return; }
+      loadTeachers();
+    };
+
+    document.getElementById('teacher-cancel-btn').addEventListener('click', () => resetTeacherForm());
+
+    function resetTeacherForm() {
+      editingTeacherId = null;
+      editingTeacherPhotoUrl = null;
+      document.getElementById('teacher-form').reset();
+      document.getElementById('teacher-photo-preview').classList.add('hidden');
+      document.getElementById('teacher-form-title').textContent = '새 강사 추가';
+      document.getElementById('teacher-cancel-btn').classList.add('hidden');
+    }
+
+    async function uploadTeacherPhoto(file) {
+      const path = safeFileName(file.name);
+      const { error: uploadError } = await sb.storage.from('teacher-photos').upload(path, file);
+      if (uploadError) throw uploadError;
+      const { data } = sb.storage.from('teacher-photos').getPublicUrl(path);
+      return data.publicUrl;
+    }
+
+    document.getElementById('teacher-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const file = document.getElementById('teacher-photo').files[0];
+
+      let photo_url = editingTeacherPhotoUrl;
+      if (file) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = '사진 업로드 중...';
+        try {
+          photo_url = await uploadTeacherPhoto(file);
+        } catch (err) {
+          alert('사진 업로드 실패: ' + err.message);
+          submitBtn.disabled = false;
+          submitBtn.textContent = '저장';
+          return;
+        }
+        submitBtn.disabled = false;
+        submitBtn.textContent = '저장';
+      }
+
+      const payload = {
+        name: document.getElementById('teacher-name').value,
+        role: document.getElementById('teacher-role').value,
+        career: document.getElementById('teacher-career').value,
+        quote: document.getElementById('teacher-quote').value,
+        display_order: Number(document.getElementById('teacher-order').value) || 0,
+        photo_url,
+      };
+      const { error } = editingTeacherId
+        ? await sb.from('teachers').update(payload).eq('id', editingTeacherId)
+        : await sb.from('teachers').insert(payload);
+      if (error) { alert('저장 실패: ' + error.message); return; }
+      resetTeacherForm();
+      loadTeachers();
+    });
+  </script>
+</body>
+</html>
